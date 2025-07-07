@@ -3,13 +3,29 @@ import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
 
+const defaultAuthState = {
+  isAuthenticated: false,
+  token: null,
+  email: "",
+  role: "",
+  clientDetailSet: false,
+  userName: "",
+  registerFlag: false,
+  pictureURL: "",
+  userId: "",
+};
+
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [authState, setAuthState] = useState(() => {
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return defaultAuthState;
+      }
       return {
-        loggedIn: Boolean(localStorage.getItem("token")),
-        token: localStorage.getItem("token") || null,
+        isAuthenticated: true,
+        token: token,
         email: localStorage.getItem("email") || "",
         role: localStorage.getItem("role") || "",
         clientDetailSet: localStorage.getItem("clientDetailSet") === "true",
@@ -30,7 +46,7 @@ export const AuthProvider = ({ children }) => {
       if (e.key === "token") {
         setAuthState((prev) => ({
           ...prev,
-          loggedIn: Boolean(localStorage.getItem("token")),
+          isAuthenticated: Boolean(localStorage.getItem("token")),
         }));
       }
     };
@@ -40,8 +56,8 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = (authData) => {
+    console.log("Loggin in ........");
     try {
-      // Store only what's absolutely necessary
       localStorage.setItem("token", authData.token);
       localStorage.setItem("userId", authData.userid);
       localStorage.setItem("email", authData.email);
@@ -55,7 +71,7 @@ export const AuthProvider = ({ children }) => {
       );
 
       setAuthState({
-        loggedIn: true,
+        isAuthenticated: true,
         token: authData.token,
         email: authData.email,
         userId: authData.userid,
@@ -75,20 +91,8 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     try {
       console.log("Loggin out .....");
-      setAuthState({
-        loggedIn: false,
-        email: "",
-        userId: null,
-      });
       localStorage.clear();
-      // localStorage.removeItem("token");
-      // localStorage.removeItem("userId");
-      // localStorage.removeItem("email");
-      // localStorage.removeItem("role");
-      // localStorage.removeItem("userName");
-      // localStorage.removeItem("pictureURL");
-      // localStorage.removeItem("registerFlag");
-      // localStorage.removeItem("clientDetailSet");
+      setAuthState(defaultAuthState);
     } catch (error) {
       console.error("Failed to clear auth data", error);
     }

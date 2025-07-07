@@ -9,10 +9,11 @@ const GoogleSignInButton = ({ onLoginSuccess, onClose }) => {
   const handleGoogleSignIn = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
+
       const idToken = await result.user.getIdToken();
 
       const res = await axios.post(
-        `${API_BASE_URL}/auth/login_google`,
+        `${API_BASE_URL}/auth/firebase`,
         { idToken },
         {
           headers: {
@@ -23,32 +24,20 @@ const GoogleSignInButton = ({ onLoginSuccess, onClose }) => {
 
       if (res.status === 200) {
         console.log("Success");
-        onClose();
-        // dispatch(
-        //   loginSuccess({
-        //     token: res.data.token,
-        //     email: res.data.userDTO.email,
-        //     userId: res.data.userDTO.id,
-        //     role: res.data.userDTO.role,
-        //     userName: res.data.userDTO.name,
-        //     pictureURL: res.data.userDTO.pictureURL,
-        //     registerFlag: res.data.userDTO.registerFlag,
-        //     clientDetailSet: res.data.userDTO.detailSet,
-        //   })
-        // );
         onLoginSuccess({
           token: res.data.token,
-          email: res.data.userDTO.email,
-          userid: res.data.userDTO.id,
-          role: res.data.userDTO.role,
-          userName: res.data.userDTO.name,
-          pictureURL: res.data.userDTO.pictureURL,
-          flag: res.data.userDTO.registerFlag,
-          detailSet: res.data.userDTO.detailSet,
+          email: res.data.user.email,
+          userid: res.data.user.id,
+          role: res.data.user.role,
+          userName: res.data.user.name,
+          pictureURL: res.data.user.pictureURL,
+          flag: res.data.user.registerFlag,
+          detailSet: res.data.user.detailSet,
         });
+        onClose();
       }
     } catch (error) {
-      setMessage(` Google Sign-In failed: ${error.message}`);
+      console.log(error.message);
     }
   };
 

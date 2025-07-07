@@ -5,6 +5,7 @@ import { useInView } from "framer-motion";
 import qoute2 from "../../assets/images/qoute2.png";
 import qoute1 from "../../assets/images/qoute1.png";
 import person from "../../assets/images/person.jpeg";
+import { Link } from "react-router-dom";
 
 const HeroLG = React.forwardRef(({ onScroll }, forwardedRef) => {
   const localRef = useRef(null);
@@ -132,9 +133,12 @@ const HeroLG = React.forwardRef(({ onScroll }, forwardedRef) => {
 
           {/* Search CTA */}
           <div className="mx-auto mt-8 flex max-w-md flex-col gap-4 sm:flex-row">
-            <button className="rounded-lg bg-[#FF4D4F] px-6 py-3 font-medium hover:bg-[#FF7875] focus:outline-none focus:ring-2 focus:ring-[#FF4D4F] focus:ring-offset-2">
-              Search Hotels
-            </button>
+            <Link to="/hotel">
+              <button className="rounded-lg bg-[#FF4D4F] px-6 cursor-pointer py-3 font-medium hover:bg-[#FF7875] focus:outline-none focus:ring-2 focus:ring-[#FF4D4F] focus:ring-offset-2">
+                Search Hotels
+              </button>
+            </Link>
+
             <button className="rounded-lg border-2 border-white bg-white/10 px-6 py-3 font-medium backdrop-blur-sm hover:bg-white/20">
               Explore Menus
             </button>
